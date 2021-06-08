@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        h1 { text-align: center; }
+    </style>
+<script>
+function startTime() {
+  var today = new Date();
+  let year = today.getFullYear();
+  let month = today.getMonth() + 1; 
+  let date = today.getDate(); 
+  var h = today.getHours();
+  var m = today.getMinutes();
+  var s = today.getSeconds();
+  m = checkTime(m);
+  s = checkTime(s);
+  document.getElementById('txt').innerHTML =
+  year + "년" + month + "월" + date +"일      "+ h + ":" + m + ":" + s;
+  var t = setTimeout(startTime, 1000);
+}
+function checkTime(i) {
+  if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+  return i;
+}
+</script>
+</head>
+
+<body onload="startTime()">
+
+<h1 id="txt"></h1>
+
+<select id="mySelect" onchange="myselect()">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+  </select>
+  <p id="demo"></p>
+
+  <script>
+  function myselect() {
+    var x = document.getElementById("mySelect").value;
+    document.getElementById("demo").innerHTML = "You selected: " + x;
+  }
+  </script>
+</body>
+</html>

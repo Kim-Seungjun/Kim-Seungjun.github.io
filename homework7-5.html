@@ -1,0 +1,74 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+
+      <script type="text/javascript">
+          var canvas, context, canX, canY, mouseIsDown ,count,a,b= 0;
+   
+          function init() {
+              canvas = document.getElementById("myCanvas");
+              context = canvas.getContext("2d"); 
+              canvas.addEventListener("mousedown", mouseDown, false);
+              canvas.addEventListener("mousemove", mouseXY, false);
+              canvas.addEventListener("mouseup", mouseUp, false);
+          }
+
+          function mouseUp() {
+              mouseIsDown = 0;
+              mouseXY();
+          }
+   
+          function mouseDown() {
+              mouseIsDown = 1;
+              mouseXY();
+
+          }
+   
+          function mouseXY(e) {
+              if (!e) var e = event;
+              canX = e.pageX - canvas.offsetLeft;
+              canY = e.pageY - canvas.offsetTop;
+
+              showPos();
+          }
+   
+          function showPos() {
+              // large, centered, bright green text
+              context.font = "24pt Helvetica";
+              context.textAlign = "center";
+              context.textBaseline = "middle";
+              context.fillStyle = "black";
+              if (count==0){
+              a = canX;
+              b = canY;             
+              }
+              var str1 = "("+canX + ", " + canY+") up";
+              var str2 ="("+a + ", " + b+") -"+"("+canX + ", " + canY+") down";
+
+              context.clearRect(0, 0, canvas.width, canvas.height);
+              if(mouseIsDown) {
+                count=1;
+                context.fillText(str2, canvas.width / 2, canvas.height / 2, canvas.width - 10);
+                context.fillStyle = "red";
+                context.beginPath();
+                context.strokeRect(a,b,canX-a,canY-b)
+                context.strokeStyle = 'blue';
+                context.stroke();
+              }
+              else {
+                context.fillText(str1, canvas.width / 2, canvas.height / 2, canvas.width - 10);
+                context.fillStyle = "green";
+                count=0;
+              }
+
+              context.fillRect(canX -5, canY -5, 10, 10);
+
+          }
+      </script>
+   
+  </head>
+  <body onload="init()">
+      <canvas id="myCanvas" height="500" width="500" style="border:1px solid #000000;">
+      </canvas>
+  </body>
+  </html>

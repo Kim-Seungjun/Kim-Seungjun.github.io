@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <body onload="startTime()">
+      <title>caffe</title>
+      <style>
+
+        .title, .info{
+            border : 2px solid black;
+            width: 800px;
+            border-radius: 30px;
+        }
+        .title, .info, table{
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .title p{
+            font-size: 50px;
+
+        }
+        .info{
+            padding: 7px;
+            border-radius: 30px;
+            font-size: 22px;
+            background-color:#ffe2e2
+        }
+        .info table{
+            border-spacing: 35px;
+
+        }
+        select{
+            width: 45px;
+            height: 25px;
+            font-size: 18px;
+            border-radius: 20px;
+            background-color:#dbe2ef
+
+        }
+        button{
+            padding: 5px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border-radius: 30px;
+            background-color:#bad7df
+        }
+
+      body{
+        background-color: #f6f6f6
+      }
+    </style>
+
+
+    <script>
+        const menus = new Map();
+        const shopping = new Map();
+        const prices = new Map();
+
+        for(var step = 0; step < 6; step++)
+        {
+            const menu = new Map();
+            switch(step)
+            {
+                case 0:{
+                    menu.set("(hot)에스프레소", 15000);
+                    menu.set("(hot)아메리카노", 16900);
+                    menu.set("(hot)카페라떼", 16900);
+                    menu.set("(hot)카푸치노", 16900);
+                    menu.set("(hot)카라멜마키야토", 16900);
+                    menus.set("coffee(hot)", menu);
+                }break;
+                case 1:{
+                    menu.set("(cold)아메리카노", 16900);
+                    menu.set("(cold)카페라떼", 16900);
+                    menu.set("(cold)카푸치노", 16900);
+                    menu.set("(cold)카라멜마키야토", 16900);
+                    menus.set("coffee(cold)", menu);
+                }break;
+                case 2:{
+                  menu.set("(hot)녹차", 24900);
+                  menu.set("(cold)녹차", 24900);
+                  menu.set("(hot))레몬 tea", 24900);
+                  menu.set("(cold)레몬 tea", 24900);
+                  menu.set("(cold)아이스티_레몬", 24900);
+                  menu.set("(cold)아이스티_복숭아", 24900);
+                  menus.set("tea/drink", menu);
+                }break;
+                case 3:{
+                  menu.set("(cold)레몬에이드", 24900);
+                  menu.set("(cold)자몽에이드", 24900);
+                  menu.set("(cold)자몽에이드", 24900);
+                  menu.set("(cold)생과일 주스_딸기", 24900);
+                  menu.set("(cold)생과일 주스_키위", 24900);
+                  menu.set("(cold)생과일 주스_파인에플", 24900);
+                    menus.set("drink", menu);
+                }break;
+
+            }
+
+            for(let [type, list] of menus){
+                for(let [key, value] of list){
+                    prices.set(key, value);
+                }
+            }
+
+            function clearShopping(){
+                shopping.clear();
+                updateInfo();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class = "title">
+        <table>
+            <tr>
+                <td><h1>메뉴</h1></td>
+            </tr>
+        </table>
+    </div>
+    <table style="padding: 1%;">
+        <thead id="menuselect"></thead>
+    </table>
+    <div class = "info">
+        <table>
+            <tbody id="items"></tbody>
+        </table>
+    </div>
+    <table style="padding: 1%;"><tr>
+        <td><button onclick="clearShopping()">초기화</button></td>
+    </tr></table>
+    <div class = "info">
+        <table>
+            <tbody id="shoplist"></tbody>
+        </table>
+    </div>
+    <script>
+        var head = document.getElementById("menuselect");
+        var headtext = '';
+
+        updateInfo();
+
+        for(let [key, value] of menus){
+            headtext += '<th><button onclick="setMenukey(\'' + key + '\')">' + key + '</button></th>';
+        }
+        head.innerHTML = headtext;
+
+        function setMenukey(key){
+            var body = document.getElementById("items");
+            var bodytext = '';
+            var menu = new Map(menus.get(key));
+            for(let [key, value] of menu){
+                bodytext += '<tr>';
+                bodytext += '<td>' + key + '</td>';
+                bodytext += '<td>' + value + '원</td>';
+                bodytext += '<td><select id="' + key + '">';
+                for(let i = 0; i < 10; i++){
+                    bodytext += '<option value="' + i + '">' + i + '</option>';
+                }
+                bodytext += '</select></td>';
+                bodytext += '<td><button onclick="putItems(\'' + key + '\')">' + '담기' + '</button></td>';
+                bodytext += '</tr>';    
+            }
+            body.innerHTML = bodytext;
+        }
+
+        function putItems(key){
+            var select = document.getElementById(key);
+            const count = select.options[select.selectedIndex].text;
+            if(count > 0)
+                shopping.set(key, count);
+            else
+                shopping.delete(key);
+            
+            updateInfo();
+        }
+
+        function updateInfo(){
+            var body = document.getElementById("shoplist");
+            var bodytext = '';
+            if(shopping.size > 0)
+            {
+                var price = 0;
+                var index = 0;
+                bodytext += '<tr><td>담은 상품</td></td>';
+                for(let [key, value] of shopping){
+                    var sum = prices.get(key) * value;
+                    bodytext += '<tr><td>' + key + ' ' + value + ' 개 = ' + sum + '원</td></td>';
+                    price += sum;
+                }
+                bodytext += '<tr><td>합계' + price + '원</td></td>';
+            }
+            else
+            {
+                bodytext = "담은 상품이 없습니다!";
+            }
+            body.innerHTML = bodytext;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<style>
+    body {
+        margin: 0px;
+        padding: 0px;
+    }
+</style>
+</head>
+<body>
+    <canvas id="myCanvas" width="500" height="500" style="border:1px solid #000000;"></canvas>
+    <script>
+
+    var canvas = document.getElementById('myCanvas');
+    var context = canvas.getContext('2d');
+
+
+    var myRectangle = {
+        x: 200,
+        y: 200,
+    };
+
+    var runAnimation = {
+        value: false
+    };
+
+    window.requestAnimFrame = (function(callback) {
+        return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame ||
+        function(callback) {
+            window.setTimeout(callback, 1000 / 60);
+        };
+    })();
+
+    function drawRect(myRectangle, context) {
+        context.beginPath();
+        context.arc(myRectangle.x, myRectangle.y, 25,0, 2*Math.PI);
+        context.fillStyle = "green";
+        context.fill();
+        context.strokeStyle = "green";
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(0, 0);
+        context.lineTo(myRectangle.x, myRectangle.y);
+        context.lineWidth = 3;
+        context.strokeStyle = 'blue';
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(0, 500);
+        context.lineTo(myRectangle.x, myRectangle.y);
+        context.lineWidth = 3;
+        context.strokeStyle = 'blue';
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(500, 0);
+        context.lineTo(myRectangle.x, myRectangle.y);
+        context.lineWidth = 3;
+        context.strokeStyle = 'blue';
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(500, 500);
+        context.lineTo(myRectangle.x, myRectangle.y);
+        context.lineWidth = 3;
+        context.strokeStyle = 'blue';
+        context.stroke();
+
+        context.beginPath();
+        context.moveTo(250, 250);
+        context.lineTo(myRectangle.x, myRectangle.y);
+        context.lineWidth = 3;
+        context.strokeStyle = 'red';
+        context.stroke();
+    }
+
+    function animate(myRectangle, runAnimation, canvas, context,a) {
+        if(runAnimation.value) {
+
+            var speed1 = myRectangle.x/110+Math.cos(0.1);
+            var speed2 = myRectangle.y/110+Math.sin(0.1);
+
+            if (myRectangle.x>=0&&myRectangle.x<=250&&myRectangle.y>0&&myRectangle.y<250){
+                myRectangle.x += speed1;
+                myRectangle.y -= speed2;
+            }
+
+            if(myRectangle.x>=250&&myRectangle.x<=500&&myRectangle.y>0&&myRectangle.y<250){
+                myRectangle.x+=speed1;
+                myRectangle.y+=speed2;
+            }
+
+            if (myRectangle.x>=250&&myRectangle.x<=500&&myRectangle.y<500&&myRectangle.y>=250){
+                myRectangle.x -= speed1;
+                myRectangle.y+= speed2; 
+            }
+
+            if(myRectangle.x<=250&&myRectangle.x>=0&&myRectangle.y<500&&myRectangle.y>=250){
+                myRectangle.x-=speed1;
+                myRectangle.y-=speed2;
+            }
+
+
+            
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            drawRect(myRectangle, context);
+
+            requestAnimFrame(function() {
+                animate(myRectangle, runAnimation, canvas, context);
+            });
+        }
+    }
+
+    // add click listener to canvas
+    document.getElementById('myCanvas').addEventListener('click', function() {
+        runAnimation.value = !runAnimation.value;
+        if(runAnimation.value) {
+
+            animate(myRectangle, runAnimation, canvas, context);
+        }
+    });
+
+    drawRect(myRectangle, context);
+    </script>
+</body>
+</html>    
